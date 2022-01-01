@@ -1,11 +1,8 @@
 import cv2
 import numpy as np
 
-
-
 widthImg=360
 heightImg=640
-
 frameWidth=640
 frameHeight=480
 cap= cv2.VideoCapture(0)
@@ -20,13 +17,12 @@ def preProcessing(img):
     kernel=np.ones((5,5))
     imgDial= cv2.dilate(imgCanny,kernel,iterations=2)
     imgThres=cv2.erode(imgDial,kernel,iterations=1)
-
     return imgThres
+
 def getContours(img):
     biggest=np.array([])
     maxArea=0
     contours, hierarchy=cv2.findContours(img,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
-
     for cnt in contours:
         area=cv2.contourArea(cnt)
         #print(area)
@@ -63,8 +59,6 @@ def reorder(myPoints):
       #print("New points",myPointsNew)
       return myPointsNew
 
-
-
 def getWarp(img,biggest):
     biggest1=reorder(biggest)
 
@@ -74,14 +68,10 @@ def getWarp(img,biggest):
     pts2 = np.float32([ [0,0], [widthImg,0], [0,heightImg], [widthImg,heightImg] ])
     matrix=cv2.getPerspectiveTransform(pts1,pts2)
     imgOutput= cv2.warpPerspective(img,matrix,(widthImg,heightImg))
-
     #cropped image
     #imgCropped=imgOutput[20:imgOutput.shape[0]-20,20:imgOutput.shape[1]-20]
     #imgCroppedResize=cv2.resize(imgCropped,(widthImg,heightImg))
     return imgOutput
-
-
-
 
 while True:
     #success, img=cap.read()
